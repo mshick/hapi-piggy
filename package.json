@@ -1,0 +1,44 @@
+{
+  "name": "hapi-piggy",
+  "version": "0.1.0",
+  "author": "Michael Shick <m@shick.us>",
+  "license": "MIT",
+  "description": "A PostgreSQL plugin for HAPI, with a convenient key/val store abstraction layer.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mshick/hapi-piggy.git"
+  },
+  "engines": {
+    "node": ">=6.9.0"
+  },
+  "keywords": [
+    "hapi",
+    "postgresql",
+    "postgres",
+    "keyval",
+    "keystore",
+    "upsert",
+    "set",
+    "database",
+    "query"
+  ],
+  "bugs": {
+    "url": "https://github.com/mshick/hapi-piggy/issues"
+  },
+  "homepage": "https://github.com/mshick/hapi-piggy#readme",
+  "dependencies": {
+    "hoek": "^4.1.0",
+    "lodash": "^4.17.4",
+    "pg": "^6.1.5",
+    "qs": "^6.4.0",
+    "shortid": "^2.2.8"
+  },
+  "devDependencies": {
+    "eslint": "^3.17.1",
+    "eslint-config-xo-space": "^0.15.0"
+  }
+}
