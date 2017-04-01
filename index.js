@@ -1,12 +1,12 @@
-const assert = require('assert');
 const applyToDefaults = require('hoek').applyToDefaults;
 const pkg = require('./package.json');
 const createConnection = require('./lib/create-connection');
 const tableExists = require('./lib/table-exists');
-const createNotifyTrigger = require('./lib/create-notify-trigger');
 const createTable = require('./lib/create-table');
+const getTableColumns = require('./lib/get-table-columns');
 const createWatchedTable = require('./lib/create-watched-table');
 const watchTable = require('./lib/watch-table');
+const createStore = require('./lib/create-store');
 const set = require('./lib/set');
 const del = require('./lib/del');
 const get = require('./lib/get');
@@ -78,27 +78,16 @@ exports.register = (plugin, userOptions, next) => {
     return createConnection(args, pluginArgs);
   }, {callback: false});
 
-  /* Query helpers */
+  /* Helpers */
 
   plugin.method(`${SHORT_NAME}.tableExists`, tableExists, {callback: false});
-  plugin.method(`${SHORT_NAME}.createNotifyTrigger`, createNotifyTrigger, {callback: false});
+  plugin.method(`${SHORT_NAME}.getTableColumns`, getTableColumns, {callback: false});
   plugin.method(`${SHORT_NAME}.createTable`, createTable, {callback: false});
-  plugin.method(`${SHORT_NAME}.createWatchedTrigger`, createWatchedTable, {callback: false});
+  plugin.method(`${SHORT_NAME}.createWatchedTable`, createWatchedTable, {callback: false});
 
   /* KeyVal Helpers */
 
-  plugin.method(`${SHORT_NAME}.createStore`, ({client, table, indexes}) => {
-    let columns = 'key text primary key, value jsonb';
-    if (indexes && indexes.length) {
-      indexes.forEach(key => {
-        if (key === 'key' || key === 'value') {
-          assert.fail(false, `'key' and 'value' are not valid indexes`);
-        }
-        columns += `, ${key} text NOT NULL`;
-      });
-    }
-    return createTable({client, table, columns, indexes});
-  });
+  plugin.method(`${SHORT_NAME}.createStore`, createStore, {callback: false});
   plugin.method(`${SHORT_NAME}.get`, get, {callback: false});
   plugin.method(`${SHORT_NAME}.set`, set, {callback: false});
   plugin.method(`${SHORT_NAME}.upsert`, upsert, {callback: false});

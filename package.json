@@ -6,7 +6,7 @@
   "description": "A PostgreSQL plugin for HAPI, with a convenient key/val store abstraction layer.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava"
   },
   "repository": {
     "type": "git",
@@ -38,6 +38,7 @@
     "shortid": "^2.2.8"
   },
   "devDependencies": {
+    "ava": "^0.18.2",
     "eslint": "^3.17.1",
     "eslint-config-xo-space": "^0.15.0"
   }
