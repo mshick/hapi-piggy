@@ -3,7 +3,7 @@ const Ajv = require('ajv');
 const {applyToDefaults} = require('hoek');
 const {
   createConnection,
-  closePools,
+  closeConnection,
   tableExists,
   createTable,
   createWatchedTable,
@@ -91,7 +91,7 @@ exports.register = (server, userOptions, next) => {
       state.openClients.forEach(c => c.close());
     }
 
-    return closePools({state}).then(() => {
+    return closeConnection(null, {state}).then(() => {
       resetState();
       server.log([pkg.name], 'connection pools closed');
     });
@@ -101,12 +101,14 @@ exports.register = (server, userOptions, next) => {
     closeAll().then(() => next()).catch(next);
   });
 
-  const pluginArgs = {options, state};
-
-  /* Create a connection */
+  /* Manage connections */
 
   server.method(`${SHORT_NAME}.createConnection`, args => {
-    return createConnection(args, pluginArgs);
+    return createConnection(args, {options, state});
+  }, {callback: false});
+
+  server.method(`${SHORT_NAME}.closeConnection`, args => {
+    return closeConnection(args, {options, state});
   }, {callback: false});
 
   /* Helpers */
@@ -128,7 +130,7 @@ exports.register = (server, userOptions, next) => {
   /* Requires a long-lived connection */
 
   server.method(`${SHORT_NAME}.watchTable`, args => {
-    return watchTable(args, pluginArgs);
+    return watchTable(args, {options, state});
   });
 
   server.log(['hapi-piggy', 'registered'], 'hapi-piggy registered');
