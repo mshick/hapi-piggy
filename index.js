@@ -1,22 +1,59 @@
-const applyToDefaults = require('hoek').applyToDefaults;
 const pkg = require('./package.json');
-const createConnection = require('./lib/create-connection');
-const tableExists = require('./lib/table-exists');
-const createTable = require('./lib/create-table');
-const getTableColumns = require('./lib/get-table-columns');
-const createWatchedTable = require('./lib/create-watched-table');
-const watchTable = require('./lib/watch-table');
-const createStore = require('./lib/create-store');
-const set = require('./lib/set');
-const del = require('./lib/del');
-const get = require('./lib/get');
-const upsert = require('./lib/upsert');
+const Ajv = require('ajv');
+const {applyToDefaults} = require('hoek');
+const {
+  createConnection,
+  tableExists,
+  createTable,
+  createWatchedTable,
+  getTableColumns,
+  watchTable,
+  createStore,
+  set,
+  del,
+  get,
+  mget,
+  upsert
+} = require('libpiggy');
+
+const ajv = new Ajv();
 
 const SHORT_NAME = pkg.name.replace('hapi-', '');
 
+const optionsSchema = {
+  title: 'hapi-piggy options',
+  type: 'object',
+  additionalProperties: false,
+  properties: {
+    connectionName: {
+      type: 'string'
+    },
+    url: {
+      type: 'string'
+    },
+    connection: {
+      type: 'object',
+      properties: {
+        ssl: {
+          type: 'boolean'
+        },
+        max: {
+          type: 'integer'
+        },
+        min: {
+          type: 'integer'
+        },
+        idleTimeoutMillis: {
+          type: 'integer'
+        }
+      }
+    }
+  },
+  required: ['url']
+};
+
 const defaultOptions = {
   connectionName: 'default',
-  url: 'postgresql://localhost',
   connection: {
     ssl: true,
     max: 10,
@@ -30,14 +67,20 @@ const initialState = {
   _openClients: []
 };
 
-exports.register = (plugin, userOptions, next) => {
+exports.register = (server, userOptions, next) => {
   const options = applyToDefaults(defaultOptions, userOptions || {});
+
+  const isValid = ajv.validate(optionsSchema, options);
+
+  if (!isValid) {
+    return next(ajv.errors);
+  }
 
   let state;
 
   const resetState = () => {
-    plugin.app[pkg.name] = applyToDefaults(initialState, {});
-    state = plugin.app[pkg.name];
+    server.app[pkg.name] = applyToDefaults(initialState, {});
+    state = server.app[pkg.name];
   };
 
   resetState();
@@ -62,11 +105,11 @@ exports.register = (plugin, userOptions, next) => {
       .then(() => {
         closingPools = null;
         resetState();
-        plugin.log([pkg.name], 'connection pools closed');
+        server.log([pkg.name], 'connection pools closed');
       });
   };
 
-  plugin.ext('onPreStop', (server, next) => {
+  server.ext('onPreStop', (server, next) => {
     closeAll().then(() => next()).catch(next);
   });
 
@@ -74,30 +117,33 @@ exports.register = (plugin, userOptions, next) => {
 
   /* Create a connection */
 
-  plugin.method(`${SHORT_NAME}.createConnection`, args => {
+  server.method(`${SHORT_NAME}.createConnection`, args => {
     return createConnection(args, pluginArgs);
   }, {callback: false});
 
   /* Helpers */
 
-  plugin.method(`${SHORT_NAME}.tableExists`, tableExists, {callback: false});
-  plugin.method(`${SHORT_NAME}.getTableColumns`, getTableColumns, {callback: false});
-  plugin.method(`${SHORT_NAME}.createTable`, createTable, {callback: false});
-  plugin.method(`${SHORT_NAME}.createWatchedTable`, createWatchedTable, {callback: false});
+  server.method(`${SHORT_NAME}.tableExists`, tableExists, {callback: false});
+  server.method(`${SHORT_NAME}.getTableColumns`, getTableColumns, {callback: false});
+  server.method(`${SHORT_NAME}.createTable`, createTable, {callback: false});
+  server.method(`${SHORT_NAME}.createWatchedTable`, createWatchedTable, {callback: false});
 
   /* KeyVal Helpers */
 
-  plugin.method(`${SHORT_NAME}.createStore`, createStore, {callback: false});
-  plugin.method(`${SHORT_NAME}.get`, get, {callback: false});
-  plugin.method(`${SHORT_NAME}.set`, set, {callback: false});
-  plugin.method(`${SHORT_NAME}.upsert`, upsert, {callback: false});
-  plugin.method(`${SHORT_NAME}.del`, del, {callback: false});
+  server.method(`${SHORT_NAME}.createStore`, createStore, {callback: false});
+  server.method(`${SHORT_NAME}.get`, get, {callback: false});
+  server.method(`${SHORT_NAME}.mget`, mget, {callback: false});
+  server.method(`${SHORT_NAME}.set`, set, {callback: false});
+  server.method(`${SHORT_NAME}.upsert`, upsert, {callback: false});
+  server.method(`${SHORT_NAME}.del`, del, {callback: false});
 
   /* Requires a long-lived connection */
 
-  plugin.method(`${SHORT_NAME}.watchTable`, args => {
+  server.method(`${SHORT_NAME}.watchTable`, args => {
     return watchTable(args, pluginArgs);
   });
+
+  server.log(['hapi-piggy', 'registered'], 'hapi-piggy registered');
 
   next();
 };

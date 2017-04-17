@@ -109,20 +109,11 @@ createConnection()
 
 There are many, take a look at index.js.
 
-## Testing
-
-You'll need to provide the URL to a running PostgreSQL server, like so:
-
-```sh
-POSTGRESQL_URL=postgresql://user:pass@localhost/db npm test
-```
-
 ## Requirements
 
 * node.js >= 6.0
-* PostgresQL >= 9.5
+* PostgresQL >= 9.4 (tested with 9.6)
 
 ## Todo
 
-* Legit tests
-* Break `piggy` into a standalone lib
+* Tests for this plugin (libpiggy will be tested alone)
