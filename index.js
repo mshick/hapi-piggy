@@ -3,6 +3,7 @@ const Ajv = require('ajv');
 const {applyToDefaults} = require('hoek');
 const {
   createConnection,
+  closePools,
   tableExists,
   createTable,
   createWatchedTable,
@@ -63,8 +64,8 @@ const defaultOptions = {
 };
 
 const initialState = {
-  _openPools: {},
-  _openClients: []
+  openPools: {},
+  openClients: []
 };
 
 exports.register = (server, userOptions, next) => {
@@ -86,27 +87,14 @@ exports.register = (server, userOptions, next) => {
   resetState();
 
   const closeAll = () => {
-    let closingClients = [];
-    let closingPools = [];
-
-    if (state._openClients.length) {
-      closingClients = state._openClients.map(client => client.release());
-    } else {
-      closingClients.push(Promise.resolve());
+    if (state.openClients.length) {
+      state.openClients.forEach(c => c.close());
     }
 
-    return Promise.all(closingClients)
-      .then(() => {
-        closingClients = null;
-        closingPools = Object.keys(state._openPools)
-          .map(poolName => state._openPools[poolName].end());
-        return Promise.all(closingPools);
-      })
-      .then(() => {
-        closingPools = null;
-        resetState();
-        server.log([pkg.name], 'connection pools closed');
-      });
+    return closePools({state}).then(() => {
+      resetState();
+      server.log([pkg.name], 'connection pools closed');
+    });
   };
 
   server.ext('onPreStop', (server, next) => {

@@ -30,7 +30,7 @@ const uuid = require('uuid/v4');
 const {createConnection, createStore, get, upsert} = server.methods.piggy;
 
 createConnection()
-  .then(({client}) => {
+  .then(client => {
     return createStore({
       client,
       table: 'example',
@@ -55,7 +55,7 @@ createConnection()
     });
   })
   .then(({client, key, val}) => {
-    client.release();
+    client.close();
     console.log(key, value);
     // 'uuid...', {firstName: 'Cool', lastName: 'Foo', car: 'Lambo'}
   });
@@ -81,7 +81,7 @@ const watcher = function ({parsed}) {
 };
 
 createConnection()
-  .then(({client}) => {
+  .then(client => {
     return createStore({
       client,
       table: 'example',
@@ -101,7 +101,10 @@ createConnection()
       table: 'example',
       key: 'foo',
       val: 'bar'
-    });
+    })
+  })
+  .then(({client}) => {
+    client.close();
   });
 ```
 
