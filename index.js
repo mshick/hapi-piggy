@@ -14,7 +14,8 @@ const {
   del,
   get,
   mget,
-  upsert
+  upsert,
+  listen
 } = require('libpiggy');
 
 const ajv = new Ajv();
@@ -129,9 +130,8 @@ exports.register = (server, userOptions, next) => {
 
   /* Requires a long-lived connection */
 
-  server.method(`${SHORT_NAME}.watchTable`, args => {
-    return watchTable(args, {options, state});
-  });
+  server.method(`${SHORT_NAME}.watchTable`, watchTable, {callback: false});
+  server.method(`${SHORT_NAME}.listen`, listen, {callback: false});
 
   server.log(['hapi-piggy', 'registered'], 'hapi-piggy registered');
 
