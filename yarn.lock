@@ -2051,9 +2051,9 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-libpiggy@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/libpiggy/-/libpiggy-0.5.2.tgz#4687ff95d5fc3dc240f2b1309bd4249282da3936"
+libpiggy@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/libpiggy/-/libpiggy-0.5.3.tgz#ce8a5f1cd5bd8fd92eb502f50128634a00d2f869"
   dependencies:
     lodash "^4.17.4"
     pg "^6.1.5"
