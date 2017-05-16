@@ -25,7 +25,7 @@ const SHORT_NAME = pkg.name.replace('hapi-', '');
 const optionsSchema = {
   title: 'hapi-piggy options',
   type: 'object',
-  additionalProperties: false,
+  additionalProperties: true,
   properties: {
     connectionName: {
       type: 'string'
@@ -37,16 +37,24 @@ const optionsSchema = {
       type: 'object',
       properties: {
         ssl: {
-          type: 'boolean'
+          type: 'object',
+          properties: {
+            requestCert: {
+              type: 'boolean'
+            },
+            rejectUnauthorized: {
+              type: 'boolean'
+            }
+          }
         },
         max: {
-          type: 'integer'
+          type: ['integer', 'null']
         },
         min: {
-          type: 'integer'
+          type: ['integer', 'null']
         },
         idleTimeoutMillis: {
-          type: 'integer'
+          type: ['integer', 'null']
         }
       }
     }
@@ -59,7 +67,6 @@ const validate = ajv.compile(optionsSchema);
 const defaultOptions = {
   connectionName: 'default',
   connection: {
-    ssl: true,
     max: 10,
     min: 4,
     idleTimeoutMillis: 30000

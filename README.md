@@ -114,7 +114,7 @@ There are many, take a look at index.js.
 
 ## Requirements
 
-* node.js >= 6.0
+* node.js >= 4.0
 * PostgresQL >= 9.4 (tested with 9.6)
 
 ## Todo

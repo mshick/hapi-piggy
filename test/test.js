@@ -1,7 +1,7 @@
 import test from 'ava';
 import {Server} from 'hapi';
 
-const {POSTGRESQL_URL} = process.env;
+const {PGHOST} = process.env;
 
 let server;
 
@@ -25,10 +25,10 @@ test.cb('reject invalid options', t => {
   server.register({
     register: require('../'),
     options: {
-      urll: 'postgresql://localhost/db'
+      url: 12345
     }
   }, err => {
-    if (err && err[0].message === 'should NOT have additional properties') {
+    if (err && err[0].message === 'should be string') {
       t.pass();
     } else {
       t.fail();
@@ -96,12 +96,12 @@ test.cb('should be able to find the plugin exposed methods', t => {
   });
 });
 
-if (POSTGRESQL_URL) {
+if (PGHOST) {
   test('should be able to connect to the database and clean up after itself', async t => {
     const err = await server.registerPromise({
       register: require('../'),
       options: {
-        url: POSTGRESQL_URL
+        url: PGHOST
       }
     });
 
