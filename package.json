@@ -31,18 +31,17 @@
   },
   "homepage": "https://github.com/mshick/hapi-piggy#readme",
   "dependencies": {
-    "ajv": "^5.0.0",
+    "ajv": "^5.1.1",
     "hapi": "^16.1.1",
     "hoek": "^4.1.0",
-    "libpiggy": "^0.5.6",
+    "libpiggy": "^0.5.8",
     "lodash": "^4.17.4",
-    "pg": "^6.1.5",
     "qs": "^6.4.0",
     "shortid": "^2.2.8"
   },
   "devDependencies": {
-    "ava": "^0.18.2",
+    "ava": "^0.19.1",
     "eslint": "^3.17.1",
-    "eslint-config-xo-space": "^0.15.0"
+    "eslint-config-xo-space": "^0.16.0"
   }
 }
