@@ -1,6 +1,6 @@
 const pkg = require('./package.json');
 const Ajv = require('ajv');
-const {applyToDefaults} = require('hoek');
+const defaultsDeep = require('lodash/defaultsDeep');
 const {
   createConnection,
   closeConnection,
@@ -54,6 +54,8 @@ const optionsSchema = {
   required: ['url']
 };
 
+const validate = ajv.compile(optionsSchema);
+
 const defaultOptions = {
   connectionName: 'default',
   connection: {
@@ -70,18 +72,18 @@ const initialState = {
 };
 
 exports.register = (server, userOptions, next) => {
-  const options = applyToDefaults(defaultOptions, userOptions || {});
+  const options = defaultsDeep({}, userOptions, defaultOptions);
 
-  const isValid = ajv.validate(optionsSchema, options);
+  const isValid = validate(options);
 
   if (!isValid) {
-    return next(ajv.errors);
+    return next(validate.errors);
   }
 
   let state;
 
   const resetState = () => {
-    server.app[pkg.name] = applyToDefaults(initialState, {});
+    server.app[pkg.name] = defaultsDeep({}, initialState);
     state = server.app[pkg.name];
   };
 
