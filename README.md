@@ -1,4 +1,4 @@
-# hapi-piggy
+# hapi-piggy [![Build Status](https://travis-ci.org/mshick/hapi-piggy.svg?branch=master)](https://travis-ci.org/mshick/hapi-piggy) [![npm version](https://badge.fury.io/js/hapi-piggy.svg)](https://badge.fury.io/js/hapi-piggy)
 A PostgreSQL plugin for HAPI, with a convenient key/val store abstraction layer.
 
 ## Config
