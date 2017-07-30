@@ -2100,8 +2100,8 @@ levn@^0.3.0, levn@~0.3.0:
     type-check "~0.3.2"
 
 libpiggy@^0.7.0:
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/libpiggy/-/libpiggy-0.7.2.tgz#74cae14d92ff5a18f3c68f6c72eda4fdd3b49132"
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/libpiggy/-/libpiggy-0.7.3.tgz#38cd14e40c7b779552268ece13819645f9544894"
   dependencies:
     lodash "^4.17.4"
     pg "^7.0.2"

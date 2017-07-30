@@ -2,7 +2,10 @@ const pkg = require('./package.json');
 const Ajv = require('ajv');
 const defaultsDeep = require('lodash/defaultsDeep');
 const {
+  constants,
   state,
+  createPool,
+  createClient,
   createConnection,
   closeConnection,
   tableExists,
@@ -64,7 +67,6 @@ const optionsSchema = {
 const validate = ajv.compile(optionsSchema);
 
 const defaultOptions = {
-  connectionName: 'default',
   connection: {
     max: 10,
     min: 4,
@@ -97,34 +99,66 @@ exports.register = (server, userOptions, next) => {
     closeAll().then(() => next()).catch(next);
   });
 
+  /* Expose constants */
+
+  server.expose('constants', constants);
+
   /* Manage connections */
 
-  server.method(`${SHORT_NAME}.createConnection`, args => {
-    return createConnection(args, {options, state});
-  }, {callback: false});
+  server.method(`${SHORT_NAME}.createPool`, args => (
+    createPool(args, {options})
+  ));
 
-  server.method(`${SHORT_NAME}.closeConnection`, args => {
-    return closeConnection(args, {options, state});
-  }, {callback: false});
+  server.method(`${SHORT_NAME}.createClient`, args => (
+    createClient(args, {options})
+  ));
+
+  server.method(`${SHORT_NAME}.createConnection`, args => (
+    createConnection(args, {options})
+  ));
+
+  server.method(`${SHORT_NAME}.closeConnection`, args => (
+    closeConnection(args, {options})
+  ));
 
   /* Helpers */
 
-  server.method(`${SHORT_NAME}.tableExists`, tableExists, {callback: false});
-  server.method(`${SHORT_NAME}.getTableColumns`, getTableColumns, {callback: false});
+  server.method(`${SHORT_NAME}.tableExists`, args => (
+    tableExists(args, {options})
+  ));
+  server.method(`${SHORT_NAME}.getTableColumns`, args => (
+    getTableColumns(args, {options})
+  ));
 
   /* KeyVal Helpers */
 
-  server.method(`${SHORT_NAME}.createStore`, createStore, {callback: false});
-  server.method(`${SHORT_NAME}.get`, get, {callback: false});
-  server.method(`${SHORT_NAME}.mget`, mget, {callback: false});
-  server.method(`${SHORT_NAME}.set`, set, {callback: false});
-  server.method(`${SHORT_NAME}.upsert`, upsert, {callback: false});
-  server.method(`${SHORT_NAME}.del`, del, {callback: false});
+  server.method(`${SHORT_NAME}.createStore`, args => (
+    createStore(args, {options})
+  ));
+  server.method(`${SHORT_NAME}.get`, args => (
+    get(args, {options})
+  ));
+  server.method(`${SHORT_NAME}.mget`, args => (
+    mget(args, {options})
+  ));
+  server.method(`${SHORT_NAME}.set`, args => (
+    set(args, {options})
+  ));
+  server.method(`${SHORT_NAME}.upsert`, args => (
+    upsert(args, {options})
+  ));
+  server.method(`${SHORT_NAME}.del`, args => (
+    del(args, {options})
+  ));
 
   /* Requires a long-lived connection */
 
-  server.method(`${SHORT_NAME}.watchTable`, watchTable, {callback: false});
-  server.method(`${SHORT_NAME}.listen`, listen, {callback: false});
+  server.method(`${SHORT_NAME}.watchTable`, args => (
+    watchTable(args, {options})
+  ));
+  server.method(`${SHORT_NAME}.listen`, args => (
+    listen(args, {options})
+  ));
 
   server.log(['hapi-piggy', 'registered'], 'hapi-piggy registered');
 

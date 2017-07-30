@@ -81,6 +81,9 @@ test.cb('should be able to find the plugin exposed methods', t => {
     const methods = server.methods.piggy;
 
     t.truthy(methods.createConnection);
+    t.truthy(methods.closeConnection);
+    t.truthy(methods.createPool);
+    t.truthy(methods.createClient);
     t.truthy(methods.tableExists);
     t.truthy(methods.getTableColumns);
     t.truthy(methods.watchTable);
