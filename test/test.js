@@ -1,7 +1,8 @@
 import test from 'ava';
 import {Server} from 'hapi';
 
-const {PGHOST} = process.env;
+const {POSTGRES_USER, POSTGRES_DB} = process.env;
+const PG_URL = `postgresql://${POSTGRES_USER}@localhost/${POSTGRES_DB}`;
 
 let server;
 
@@ -81,8 +82,6 @@ test.cb('should be able to find the plugin exposed methods', t => {
 
     t.truthy(methods.createConnection);
     t.truthy(methods.tableExists);
-    t.truthy(methods.createTable);
-    t.truthy(methods.createWatchedTable);
     t.truthy(methods.getTableColumns);
     t.truthy(methods.watchTable);
     t.truthy(methods.createStore);
@@ -96,12 +95,12 @@ test.cb('should be able to find the plugin exposed methods', t => {
   });
 });
 
-if (PGHOST) {
+if (PG_URL) {
   test('should be able to connect to the database and clean up after itself', async t => {
     const err = await server.registerPromise({
       register: require('../'),
       options: {
-        url: PGHOST
+        url: PG_URL
       }
     });
 

@@ -2,11 +2,10 @@ const pkg = require('./package.json');
 const Ajv = require('ajv');
 const defaultsDeep = require('lodash/defaultsDeep');
 const {
+  state,
   createConnection,
   closeConnection,
   tableExists,
-  createTable,
-  createWatchedTable,
   getTableColumns,
   watchTable,
   createStore,
@@ -73,11 +72,6 @@ const defaultOptions = {
   }
 };
 
-const initialState = {
-  openPools: {},
-  openClients: []
-};
-
 exports.register = (server, userOptions, next) => {
   const options = defaultsDeep({}, userOptions, defaultOptions);
 
@@ -87,22 +81,14 @@ exports.register = (server, userOptions, next) => {
     return next(validate.errors);
   }
 
-  let state;
-
-  const resetState = () => {
-    server.app[pkg.name] = defaultsDeep({}, initialState);
-    state = server.app[pkg.name];
-  };
-
-  resetState();
+  server.app[pkg.name] = state;
 
   const closeAll = () => {
     if (state.openClients.length) {
       state.openClients.forEach(c => c.close());
     }
 
-    return closeConnection(null, {state}).then(() => {
-      resetState();
+    return closeConnection().then(() => {
       server.log([pkg.name], 'connection pools closed');
     });
   };
@@ -125,8 +111,6 @@ exports.register = (server, userOptions, next) => {
 
   server.method(`${SHORT_NAME}.tableExists`, tableExists, {callback: false});
   server.method(`${SHORT_NAME}.getTableColumns`, getTableColumns, {callback: false});
-  server.method(`${SHORT_NAME}.createTable`, createTable, {callback: false});
-  server.method(`${SHORT_NAME}.createWatchedTable`, createWatchedTable, {callback: false});
 
   /* KeyVal Helpers */
 
