@@ -1534,8 +1534,8 @@ gauge@~2.7.3:
     wide-align "^1.1.0"
 
 get-port@^3.0.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/get-port/-/get-port-3.1.0.tgz#ef01b18a84ca6486970ff99e54446141a73ffd3e"
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/get-port/-/get-port-3.2.0.tgz#dd7ce7de187c06c8bf353796ac71e099f0980ebc"
 
 get-stdin@^4.0.1:
   version "4.0.1"
@@ -2157,8 +2157,8 @@ levn@^0.3.0, levn@~0.3.0:
     type-check "~0.3.2"
 
 libpiggy@^0.7.0:
-  version "0.7.6"
-  resolved "https://registry.yarnpkg.com/libpiggy/-/libpiggy-0.7.6.tgz#5591c29bf8a5c21e898072bd5d31bbcdf49b2dfd"
+  version "0.7.7"
+  resolved "https://registry.yarnpkg.com/libpiggy/-/libpiggy-0.7.7.tgz#7e1ac2062b4bee8e5dab6ad49381e4fe6a9c1700"
   dependencies:
     lodash "^4.17.4"
     pg "^7.0.2"
