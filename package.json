@@ -32,12 +32,12 @@
   "homepage": "https://github.com/mshick/hapi-piggy#readme",
   "dependencies": {
     "ajv": "^5.1.1",
-    "libpiggy": "^0.7.0",
+    "libpiggy": "^0.8.1",
     "lodash": "^4.17.4"
   },
   "devDependencies": {
     "ava": "^0.22.0",
-    "babel-eslint": "^7.2.3",
+    "babel-eslint": "^8.0.0",
     "dotenv": "^4.0.0",
     "eslint": "^4.3.0",
     "eslint-config-parsley": "^1.2.1",
