@@ -32,7 +32,7 @@
   "homepage": "https://github.com/mshick/hapi-piggy#readme",
   "dependencies": {
     "ajv": "^5.1.1",
-    "libpiggy": "^0.8.3",
+    "libpiggy": "^0.8.4",
     "lodash": "^4.17.4"
   },
   "devDependencies": {
