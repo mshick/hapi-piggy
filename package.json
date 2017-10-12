@@ -1,6 +1,6 @@
 {
   "name": "hapi-piggy",
-  "version": "0.8.4",
+  "version": "0.9.0",
   "author": "Michael Shick <m@shick.us>",
   "license": "MIT",
   "description": "A PostgreSQL plugin for HAPI, with a convenient key/val store abstraction layer.",
