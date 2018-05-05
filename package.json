@@ -45,7 +45,7 @@
     "eslint-plugin-filenames": "^1.2.0",
     "eslint-plugin-import": "^2.11.0",
     "hapi": "^17.0.0",
-    "pg-native": "^2.0.1",
+    "pg-native": "^3.0.0",
     "prettier": "^1.12.1"
   },
   "peerDependencies": {
