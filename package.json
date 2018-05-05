@@ -13,7 +13,7 @@
     "url": "https://github.com/mshick/hapi-piggy.git"
   },
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=8.0.0"
   },
   "keywords": [
     "hapi",
@@ -31,22 +31,24 @@
   },
   "homepage": "https://github.com/mshick/hapi-piggy#readme",
   "dependencies": {
-    "ajv": "^6.1.1",
+    "ajv": "^6.4.0",
     "libpiggy": "^0.11.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.10"
   },
   "devDependencies": {
     "ava": "^0.25.0",
-    "babel-eslint": "^8.0.0",
-    "dotenv": "^5.0.0",
-    "eslint": "^4.3.0",
+    "babel-eslint": "^8.2.3",
+    "dotenv": "^5.0.1",
+    "eslint": "^4.19.1",
     "eslint-config-parsley": "^1.2.1",
+    "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-filenames": "^1.2.0",
-    "eslint-plugin-import": "^2.7.0",
-    "hapi": "^16.1.1",
-    "pg-native": "^2.0.1"
+    "eslint-plugin-import": "^2.11.0",
+    "hapi": "^17.0.0",
+    "pg-native": "^2.0.1",
+    "prettier": "^1.12.1"
   },
   "peerDependencies": {
-    "hapi": "^16.1.1"
+    "hapi": "^17.0.0"
   }
 }
