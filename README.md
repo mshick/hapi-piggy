@@ -1,4 +1,5 @@
 # hapi-piggy [![Build Status](https://travis-ci.org/mshick/hapi-piggy.svg?branch=master)](https://travis-ci.org/mshick/hapi-piggy) [![npm version](https://badge.fury.io/js/hapi-piggy.svg)](https://badge.fury.io/js/hapi-piggy)
+
 A PostgreSQL plugin for HAPI, with a convenient key/val store abstraction layer.
 
 ## Config
@@ -27,7 +28,7 @@ This module exposes several server methods intended to make working with Postgre
 ```javascript
 /* Register server, config module... */
 const uuid = require('uuid/v4');
-const {createConnection, createStore, get, upsert} = server.methods.piggy;
+const { createConnection, createStore, get, upsert } = server.methods.piggy;
 
 createConnection()
   .then(client => {
@@ -37,24 +38,24 @@ createConnection()
       indexes: ['lastName']
     });
   })
-  .then(({client}) => {
+  .then(({ client }) => {
     return upsert({
       client,
       table: 'example',
-      key: {lastName: 'Foo'},
-      val: {firstName: 'Cool', lastName: 'Foo', car: 'Lambo'},
-      options: {merge: true},
+      key: { lastName: 'Foo' },
+      val: { firstName: 'Cool', lastName: 'Foo', car: 'Lambo' },
+      options: { merge: true },
       generateKeyFn: () => uuid()
     });
   })
-  .then(({client}) => {
+  .then(({ client }) => {
     return get({
       client,
       table: 'example',
-      key: {lastName: 'Foo'}
+      key: { lastName: 'Foo' }
     });
   })
-  .then(({client, key, val}) => {
+  .then(({ client, key, val }) => {
     client.close();
     console.log(key, value);
     // 'uuid...', {firstName: 'Cool', lastName: 'Foo', car: 'Lambo'}
@@ -68,14 +69,9 @@ You can easily set up a table that pushes notifications to a worker with the `cr
 Watching a store looks like this:
 
 ```javascript
-const {
-  createConnection,
-  createStore,
-  watchTable,
-  set
-} = server.methods.piggy;
+const { createConnection, createStore, watchTable, set } = server.methods.piggy;
 
-const watcher = function ({parsed}) {
+const watcher = function({ parsed }) {
   // do something with parsed payload
   // {key: 'foo'}
 };
@@ -88,22 +84,22 @@ createConnection()
       watch: true
     });
   })
-  .then(({client}) => {
+  .then(({ client }) => {
     return watchTable({
       client,
       table: 'example',
       watcher
-    })
+    });
   })
-  .then(({client}) => {
+  .then(({ client }) => {
     return set({
       client,
       table: 'example',
       key: 'foo',
       val: 'bar'
-    })
+    });
   })
-  .then(({client}) => {
+  .then(({ client }) => {
     client.close();
   });
 ```
@@ -114,7 +110,8 @@ There are many, take a look at index.js.
 
 ## Requirements
 
-* node.js >= 4.0
+* hapi >= 17.0.0
+* node.js >= 8.0
 * PostgresQL >= 9.4 (tested with 9.6)
 
 ## Todo
